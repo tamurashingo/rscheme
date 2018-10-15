@@ -56,4 +56,10 @@ RSpec.describe 'Lexer' do
     lexer = Lexer.new "abc"
     expect(lexer.lex).to eq [:symbol, 'abc']
   end
+
+  it "returns [:symbol, 'def']" do
+    lexer = Lexer.new "abc def"
+    lexer.push [:symbol, 'def']
+    expect(lexer.lex).to eq [:symbol, 'def']
+  end
 end

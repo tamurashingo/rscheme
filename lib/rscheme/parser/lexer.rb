@@ -3,9 +3,16 @@ class Lexer
   def initialize(s)
     @s = s
     @it = s.each_char
+    @buf = nil
   end
 
   def lex
+    if @buf
+      buf = @buf
+      @buf = nil
+      return buf
+    end
+
     ch = ''
     loop do
       ch = @it.next
@@ -31,6 +38,10 @@ class Lexer
     else
       return lexSymbol ch
     end
+  end
+
+  def push(lex)
+    @buf = lex
   end
 
   def lexOpenParenthesis(ch)
