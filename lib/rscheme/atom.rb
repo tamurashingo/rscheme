@@ -22,5 +22,15 @@ class Atom < LObj
   def self.ofValue(value)
     new :value, value
   end
+
+  # NULL値を作成する
+  def self.ofNil()
+    new :nil, ''
+  end
+
+  def isNil()
+    @type == :nil
+  end
+
 end
 
