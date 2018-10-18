@@ -10,4 +10,13 @@ RSpec.describe 'Parser' do
     expect(obj.type).to eq(:string)
     expect(obj.value).to eq("this is a pen")
   end
+
+  example 'integer' do
+    parser = Parser.new "100"
+    obj = parser.parse
+
+    expect(obj.isNil).to eq(false)
+    expect(obj.type).to eq(:value)
+    expect(obj.value).to eq(100)
+  end
 end
