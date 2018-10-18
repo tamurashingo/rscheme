@@ -1,7 +1,7 @@
 require 'rscheme/atom'
 
 class Pair < LObj
-  def self.ofPair(p1, p2)
+  def self.of_pair(p1, p2)
     new :pair, [p1, p2]
   end
 
@@ -13,15 +13,15 @@ class Pair < LObj
     value[1]
   end
 
-  def isNil()
+  def nil?()
     value[0].type == :nil && value[1].type == :nil
   end
 
-  def setCar(l)
+  def set_car(l)
     value[0] = l
   end
 
-  def setCdr(l)
+  def set_cdr(l)
     value[1] = l
   end
 end

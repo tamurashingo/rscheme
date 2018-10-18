@@ -5,15 +5,15 @@ class ListUtil
   
   def self.copy(list)
     src = list
-    start = Pair.ofPair Atom.ofNil, Atom.ofNil
+    start = Pair.of_pair Atom.of_nil, Atom.of_nil
     current = start
     loop do
-      if src.isNil
+      if src.nil?
         return start
       else
-        current.setCar src.car
-        cdr = Pair.ofPair Atom.ofNil, Atom.ofNil
-        current.setCdr cdr
+        current.set_car src.car
+        cdr = Pair.of_pair Atom.of_nil, Atom.of_nil
+        current.set_cdr cdr
         src = src.cdr
         current = cdr
       end
@@ -21,14 +21,14 @@ class ListUtil
   end
 
   def self.append(l1, l2)
-    if l1.isNil
+    if l1.nil?
       return copy l2
     else
       start = copy l1
       p = start
       loop do
-        if p.cdr.isNil
-          p.setCdr l2
+        if p.cdr.nil?
+          p.set_cdr l2
           return start
         else
           p = p.cdr

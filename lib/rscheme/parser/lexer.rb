@@ -30,19 +30,19 @@ class Lexer
     end
 
     if ch == '('
-      return lexOpenParenthesis ch
+      return lex_open_parenthesis ch
     elsif ch == ')'
-      return lexCloseParenthesis ch
+      return lex_close_parenthesis ch
     elsif ch == '\''
-      return lexQuote ch
+      return lex_quote ch
     elsif ch == '"'
-      return lexString ch
+      return lex_string ch
     elsif ch == '-'
-      return lexMinus ch
+      return lex_minus ch
     elsif ch.match(/[0-9.]/)
-      return lexNumber ch
+      return lex_number ch
     else
-      return lexSymbol ch
+      return lex_symbol ch
     end
   end
 
@@ -50,19 +50,19 @@ class Lexer
     @buf = lex
   end
 
-  def lexOpenParenthesis(ch)
+  def lex_open_parenthesis(ch)
     [:open_parenthesis, '(']
   end
 
-  def lexCloseParenthesis(ch)
+  def lex_close_parenthesis(ch)
     [:close_parenthesis, ')']
   end
 
-  def lexQuote(ch)
+  def lex_quote(ch)
     [:quote, "'"]
   end
 
-  def lexString(ch)
+  def lex_string(ch)
     str = ''
     loop do
       begin
@@ -78,16 +78,16 @@ class Lexer
     end
   end
 
-  def lexMinus(ch)
+  def lex_minus(ch)
     c = @it.peek
     if c.match(/[0-9.]/)
-      return lexNumber(ch)
+      return lex_number(ch)
     else
       return [:symbol, '-']
     end
   end
   
-  def lexNumber(ch)
+  def lex_number(ch)
     str = ch
     if ch == '.'
       begin
@@ -116,7 +116,7 @@ class Lexer
     end
   end
 
-  def lexSymbol(ch)
+  def lex_symbol(ch)
     str = ch
     loop do
       begin

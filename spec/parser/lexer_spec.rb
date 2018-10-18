@@ -79,7 +79,7 @@ RSpec.describe 'Lexer' do
 
     it 'raises error when scanning string' do
       lexer = Lexer.new '"abc'
-      expect{  lexer.lex }.to raise_error(LexException)
+      expect{ lexer.lex }.to raise_error(LexException)
     end
   end
 end

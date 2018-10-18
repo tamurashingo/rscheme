@@ -10,46 +10,46 @@ class Parser
   end
 
   def parse
-    parseBase
+    parse_base
   end
 
-  def parseBase
+  def parse_base
     type = @lexer.lex
     if type[0] == :open_parenthesis
-      parseList
+      parse_list
     elsif type[0] == :string
-      Atom.ofString type[1]
+      Atom.of_string type[1]
     elsif type[0] == :symbol
-      Atom.ofSymbol type[1]
+      Atom.of_symbol type[1]
     elsif type[0] == :number
       if type[1].include? '.'
-        Atom.ofValue type[1].to_f
+        Atom.of_value type[1].to_f
       else
-        Atom.ofValue type[1].to_i
+        Atom.of_value type[1].to_i
       end
     elsif type[0] == :quote
-      parseQuote
+      parse_quote
     else
       raise ParseException, 'parse error:' + type[1]
     end
   end
 
-  def parseList
-    obj = Pair.ofPair Atom.ofNil, Atom.ofNil
+  def parse_list
+    obj = Pair.of_pair Atom.of_nil, Atom.of_nil
     type = @lexer.lex
     loop do
       if type[0] == :close_parenthesis
         return obj
       else
         @lexer.push type
-        obj2 = parseBase
-        obj = ListUtil.append obj, Pair.ofPair(obj2, Atom.ofNil)
+        obj2 = parse_base
+        obj = ListUtil.append obj, Pair.of_pair(obj2, Atom.of_nil)
         type = @lexer.lex
       end
     end
   end
 
-  def parseQuote
-    Pair.ofPair Atom.ofSymbol("QUOTE"), Pair.ofPair(parseBase, Atom.ofNil)
+  def parse_quote
+    Pair.of_pair Atom.of_symbol("QUOTE"), Pair.of_pair(parse_base, Atom.of_nil)
   end
 end
