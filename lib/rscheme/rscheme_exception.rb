@@ -1,0 +1,2 @@
+class RschemeException < StandardError
+end
