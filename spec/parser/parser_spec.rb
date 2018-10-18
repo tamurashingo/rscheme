@@ -28,4 +28,13 @@ RSpec.describe 'Parser' do
     expect(obj.type).to eq(:value)
     expect(obj.value).to eq(-3.14)
   end
+
+  example 'symbol' do
+    parser = Parser.new "variable"
+    obj = parser.parse
+
+    expect(obj.isNil).to eq(false)
+    expect(obj.type).to eq(:symbol)
+    expect(obj.value).to eq("VARIABLE")
+  end
 end
