@@ -1,4 +1,5 @@
 require 'rscheme/atom'
+require 'rscheme/pair'
 require 'rscheme/parser/lexer'
 require 'rscheme/parser/parse_exception'
 
@@ -34,7 +35,18 @@ class Parser
   end
 
   def parseList
-    # TODO
+    obj = Pair.ofPair Atom.ofNil, Atom.ofNil
+    type = @lexer.lex
+    loop do
+      if type[0] == :close_parenthesis
+        return obj
+      else
+        @lexer.push type
+        obj2 = parseBase
+        obj = ListUtil.append obj, Pair.ofPair(obj2, Atom.ofNil)
+        type = @lexer.lex
+      end
+    end
   end
 
   def parseQuote

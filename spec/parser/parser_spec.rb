@@ -1,3 +1,4 @@
+require 'pry'
 require 'spec_helper'
 require 'rscheme/parser/parser'
 
@@ -54,5 +55,34 @@ RSpec.describe 'Parser' do
     expect(obj.cdr.cdr.car.value).to eq("Y")
 
     expect(obj.cdr.cdr.cdr.isNil).to eq(true)
+  end
+
+  example 'list: ((x 1) (y 2))' do
+    parser = Parser.new "((x 1) (y 2))"
+    obj = parser.parse
+
+    expect(obj.isNil).to eq(false)
+
+    expect(obj.car.type).to eq(:pair)
+
+    # (x 1)
+    expect(obj.car.car.type).to eq(:symbol)
+    expect(obj.car.car.value).to eq("X")
+
+    expect(obj.car.cdr.car.type).to eq(:value)
+    expect(obj.car.cdr.car.value).to eq(1)
+
+    expect(obj.car.cdr.cdr.isNil).to eq(true)
+
+    # (y 1)
+    expect(obj.cdr.car.car.type).to eq(:symbol)
+    expect(obj.cdr.car.car.value).to eq("Y")
+
+    expect(obj.cdr.car.cdr.car.type).to eq(:value)
+    expect(obj.cdr.car.cdr.car.value).to eq(2)
+
+    expect(obj.cdr.car.cdr.cdr.isNil).to eq(true)
+
+    expect(obj.cdr.cdr.isNil).to eq(true)
   end
 end
