@@ -85,4 +85,62 @@ RSpec.describe 'Parser' do
 
     expect(obj.cdr.cdr.isNil).to eq(true)
   end
+
+  example "quote: 'a => (QUOTE A)" do
+    parser = Parser.new "'a"
+    obj = parser.parse
+
+    # (QUOTE A)
+    expect(obj.type).to eq(:pair)
+
+    expect(obj.car.type).to eq(:symbol)
+    expect(obj.car.value).to eq("QUOTE")
+
+    expect(obj.cdr.car.type).to eq(:symbol)
+    expect(obj.cdr.car.value).to eq("A")
+
+    expect(obj.cdr.cdr.isNil).to eq(true)
+  end
+
+  example "quote: '3.14 => (QUOTE 3.14)" do
+    parser = Parser.new "'3.14"
+    obj = parser.parse
+
+    # (QUOTE 3.14)
+    expect(obj.type).to eq(:pair)
+
+    expect(obj.car.type).to eq(:symbol)
+    expect(obj.car.value).to eq("QUOTE")
+
+    expect(obj.cdr.car.type).to eq(:value)
+    expect(obj.cdr.car.value).to eq(3.14)
+
+    expect(obj.cdr.cdr.isNil).to eq(true)
+  end
+
+  example "quote: '(a b c) => (QUOTE (A B C))" do
+    parser = Parser.new "'(a b c)"
+    obj = parser.parse
+
+    # (QUOTE )
+    expect(obj.type).to eq(:pair)
+
+    expect(obj.car.type).to eq(:symbol)
+    expect(obj.car.value).to eq("QUOTE")
+
+    expect(obj.cdr.car.type).to eq(:pair)
+
+    expect(obj.cdr.car.car.type).to eq(:symbol)
+    expect(obj.cdr.car.car.value).to eq("A")
+
+    expect(obj.cdr.car.cdr.car.type).to eq(:symbol)
+    expect(obj.cdr.car.cdr.car.value).to eq("B")
+
+    expect(obj.cdr.car.cdr.cdr.car.type).to eq(:symbol)
+    expect(obj.cdr.car.cdr.cdr.car.value).to eq("C")
+
+    expect(obj.cdr.car.cdr.cdr.cdr.isNil).to eq(true)
+
+    expect(obj.cdr.cdr.isNil).to eq(true)
+  end
 end

@@ -50,6 +50,12 @@ class Parser
   end
 
   def parseQuote
-    # TODO
+    type = @lexer.lex
+    if type[0] == :string || type[0] == :symbol || type[0] == :number || type[0] == :open_parenthesis
+      @lexer.push type
+      Pair.ofPair Atom.ofSymbol("QUOTE"), Pair.ofPair(parseBase, Atom.ofNil)
+    else
+      raise ParseException, 'parse error in QUOTE: expect ATOM or PAIR but ' + type[1]
+    end
   end
 end
