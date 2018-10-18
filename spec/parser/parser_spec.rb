@@ -1,6 +1,7 @@
 require 'pry'
 require 'spec_helper'
 require 'rscheme/parser/parser'
+require 'rscheme/parser/parse_exception'
 
 RSpec.describe 'Parser' do
   example 'string' do
@@ -142,5 +143,12 @@ RSpec.describe 'Parser' do
     expect(obj.cdr.car.cdr.cdr.cdr.isNil).to eq(true)
 
     expect(obj.cdr.cdr.isNil).to eq(true)
+  end
+
+  context 'error case' do
+    it "errors when read ')'" do
+      parser = Parser.new ")"
+      expect{ parser.parse }.to raise_error(ParseException)
+    end
   end
 end
