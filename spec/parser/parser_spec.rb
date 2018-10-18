@@ -37,4 +37,22 @@ RSpec.describe 'Parser' do
     expect(obj.type).to eq(:symbol)
     expect(obj.value).to eq("VARIABLE")
   end
+
+  example 'list: (+ X Y)' do
+    parser = Parser.new "(+ X Y)"
+    obj = parser.parse
+
+    expect(obj.isNil).to eq(false)
+
+    expect(obj.car.type).to eq(:symbol)
+    expect(obj.car.value).to eq("+")
+
+    expect(obj.cdr.car.type).to eq(:symbol)
+    expect(obj.cdr.car.value).to eq("X")
+
+    expect(obj.cdr.cdr.car.type).to eq(:symbol)
+    expect(obj.cdr.cdr.car.value).to eq("Y")
+
+    expect(obj.cdr.cdr.cdr.isNil).to eq(true)
+  end
 end
