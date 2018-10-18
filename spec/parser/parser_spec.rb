@@ -19,4 +19,13 @@ RSpec.describe 'Parser' do
     expect(obj.type).to eq(:value)
     expect(obj.value).to eq(100)
   end
+
+  example 'float' do
+    parser = Parser.new "-3.14"
+    obj = parser.parse
+
+    expect(obj.isNil).to eq(false)
+    expect(obj.type).to eq(:value)
+    expect(obj.value).to eq(-3.14)
+  end
 end
