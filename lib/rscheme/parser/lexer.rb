@@ -1,3 +1,5 @@
+require 'rscheme/parser/lex_exception'
+
 class Lexer
 
   def initialize(s)
@@ -15,11 +17,15 @@ class Lexer
 
     ch = ''
     loop do
-      ch = @it.next
-      if ch == ' ' || ch == '\t' || ch == '\n'
-        next
-      else
-        break
+      begin
+        ch = @it.next
+        if ch == ' ' || ch == '\t' || ch == '\n'
+          next
+        else
+          break
+        end
+      rescue StopIteration => ex
+        raise LexException, 'lexer error: no input'
       end
     end
 
@@ -67,8 +73,7 @@ class Lexer
           str << ch
         end
       rescue StopIteration => ex
-        # parse error
-        return [:string, str]
+        raise LexException, 'lex error: end-of-line while scanning string literal'
       end
     end
   end

@@ -1,3 +1,5 @@
+require 'pry'
+
 require 'spec_helper'
 require 'rscheme/parser/lexer'
 
@@ -45,6 +47,9 @@ RSpec.describe 'Lexer' do
   it "returns [:dot, '.']" do
     lexer = Lexer.new ".a"
     expect(lexer.lex).to eq [:dot, '.']
+
+    lexer = Lexer.new "."
+    expect(lexer.lex).to eq [:dot, '.']
   end
 
   it "returns [:symbol, 'abc']" do
@@ -61,5 +66,20 @@ RSpec.describe 'Lexer' do
     lexer = Lexer.new "abc def"
     lexer.push [:symbol, 'def']
     expect(lexer.lex).to eq [:symbol, 'def']
+  end
+
+  context 'error pattern' do
+    it 'raises error when no input' do
+      lexer = Lexer.new ""
+      expect{ lexer.lex }.to raise_error(LexException)
+
+      lexer = Lexer.new "   "
+      expect{ lexer.lex }.to raise_error(LexException)
+    end
+
+    it 'raises error when scanning string' do
+      lexer = Lexer.new '"abc'
+      expect{  lexer.lex }.to raise_error(LexException)
+    end
   end
 end
