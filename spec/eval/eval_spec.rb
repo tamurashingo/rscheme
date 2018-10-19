@@ -76,4 +76,56 @@ RSpec.describe 'Eval' do
       expect{ Eval.eval exp, current }.to raise_error(RschemeException)
     end
   end
+
+  context 'quoted' do
+    example "'a" do
+      parser = Parser.new "'a"
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:symbol)
+      expect(result.value).to eq("A")
+    end
+
+    example "'-3.14" do
+      parser = Parser.new "'-3.14"
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(-3.14)
+    end
+
+    example "'\"hello\"" do
+      parser = Parser.new "'\"hello\""
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:string)
+      expect(result.value).to eq("hello")
+    end
+
+    example "'(+ a 1)" do
+      parser = Parser.new "'(+ a 1)"
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:pair)
+
+      expect(result.car.type).to eq(:symbol)
+      expect(result.car.value).to eq("+")
+
+      expect(result.cdr.car.type).to eq(:symbol)
+      expect(result.cdr.car.value).to eq("A")
+
+      expect(result.cdr.cdr.car.type).to eq(:value)
+      expect(result.cdr.cdr.car.value).to eq(1)
+
+      expect(result.cdr.cdr.cdr.nil?).to eq(true)
+    end
+  end
 end

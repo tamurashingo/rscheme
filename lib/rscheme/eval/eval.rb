@@ -7,6 +7,8 @@ module Eval
       exp
     elsif variable? exp
       env.lookup exp.value
+    elsif quoted? exp
+      exp.cdr.car
     end
   end
 
