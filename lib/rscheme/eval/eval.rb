@@ -5,6 +5,8 @@ module Eval
   def self.eval(exp, env)
     if self_evaluating? exp
       exp
+    elsif variable? exp
+      env.lookup exp.value
     end
   end
 
