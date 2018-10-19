@@ -12,6 +12,27 @@ class Environment
     @variables = Hash.new
   end
 
+  def set_variable(symbol, value)
+    env = lookup_environment symbol
+    if env
+      env.store symbol, value
+    else
+      store symbol, value
+    end
+  end
+
+  def lookup_environment(symbol)
+    if @variables.has_key? symbol
+      self
+    else
+      if @parent
+        @parent.lookup_environment symbol
+      else
+        nil
+      end
+    end
+  end
+
   def store(symbol, value)
     @variables.store symbol, value
   end

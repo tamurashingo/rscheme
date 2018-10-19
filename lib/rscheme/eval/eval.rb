@@ -1,3 +1,4 @@
+require 'rscheme/eval/apply'
 require 'rscheme/util/list_util'
 
 module Eval
@@ -9,6 +10,8 @@ module Eval
       env.lookup exp.value
     elsif quoted? exp
       exp.cdr.car
+    elsif assignment? exp
+      Apply.assignment exp, env
     end
   end
 

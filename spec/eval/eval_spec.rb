@@ -128,4 +128,27 @@ RSpec.describe 'Eval' do
       expect(result.cdr.cdr.cdr.nil?).to eq(true)
     end
   end
+
+  context 'set variable' do
+    env = Environment.create_global
+    example '(set! a 1)' do
+      parser = Parser.new '(set! a 1)'
+      exp = parser.parse
+
+      result = Eval.eval exp, env
+
+      expect(env.variables["A"].type).to eq(:value)
+      expect(env.variables["A"].value).to eq(1)
+    end
+
+    example '(set! a "abc")' do
+      parser = Parser.new '(set! a "abc")'
+      exp = parser.parse
+
+      result = Eval.eval exp, env
+
+      expect(env.variables["A"].type).to eq(:string)
+      expect(env.variables["A"].value).to eq("abc")
+    end
+  end
 end
