@@ -1,7 +1,7 @@
 require 'rscheme/atom'
 require 'rscheme/pair'
 
-class ListUtil
+module ListUtil
   
   def self.copy(list)
     src = list
@@ -36,4 +36,14 @@ class ListUtil
       end
     end
   end
+
+  # リストが指定されたタグで開始しているかをチェックする
+  #
+  # @param exp [LObj] リスト
+  # @param tag [string] タグ
+  #
+  def self.tagged_list(exp, tag)
+    exp.type == :pair && exp.car.value == tag
+  end
+
 end
