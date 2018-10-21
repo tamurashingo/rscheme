@@ -146,21 +146,24 @@ end
     expect(result.cdr.cdr.cdr.car.cdr.cdr.car.car.value).to eq("NEWLINE")
   end
 
-  example '(cond (() 1)) => (if () 1)' do
-    source = '(cond (() 1)) => (if () 1)'
+  example '(cond (t 1) (else ()) => (if t 1 ())' do
+    source = '(cond (t 1) (else ()))'
     parser = Parser.new source
     exp = parser.parse
 
     result = CondConverter.cond_to_if exp
 
-    # (if () 1)
+    # (if t 1 ())
     expect(result.car.type).to eq(:symbol)
     expect(result.car.value).to eq("IF")
 
-    expect(result.cdr.car.type).to eq(:pair)
-    expect(result.cdr.car.nil?).to eq(true)
+    expect(result.cdr.car.type).to eq(:symbol)
+    expect(result.cdr.car.value).to eq("T")
 
     expect(result.cdr.cdr.car.type).to eq(:value)
     expect(result.cdr.cdr.car.value).to eq(1)
-  end
+
+    expect(result.cdr.cdr.cdr.car.type).to eq(:pair)
+    expect(result.cdr.cdr.cdr.car.nil?).to eq(true)
+end
 end
