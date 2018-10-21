@@ -46,4 +46,25 @@ module ListUtil
     exp.type == :pair && exp.car.value == tag
   end
 
+  def self.list(*objs)
+    pair = Pair.of_pair Atom.of_nil, Atom.of_nil
+    start = pair
+    objs.each_with_index do |o, idx|
+      pair.set_car o
+      if idx != objs.length - 1
+        r = Pair.of_pair Atom.of_nil, Atom.of_nil
+        pair.set_cdr r
+        pair = r
+      end
+    end
+    start
+  end
+
+  def self.first_list(exp)
+    exp.car
+  end
+
+  def self.rest_list(exp)
+    exp.cdr
+  end
 end
