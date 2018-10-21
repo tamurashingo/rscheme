@@ -204,4 +204,35 @@ RSpec.describe 'Eval' do
       expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.cdr.nil?).to eq(true)
     end
   end
+
+  context 'if' do
+    example '(if 1 10 20) => 10' do
+      parser = Parser.new '(if 1 10 20)'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(10)
+    end
+
+    example '(if () 10 20) => 20' do
+      parser = Parser.new '(if () 10 20)'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(20)
+    end
+
+    example '(if () 10) => NIL' do
+      parser = Parser.new '(if () 10)'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.nil?).to eq(true)
+    end
+  end
 end

@@ -20,6 +20,14 @@ module Apply
     Atom.of_string "OK!"
   end
 
+  def self.if(exp, env)
+    if !Eval.eval(if_predicate(exp), env).nil?
+      Eval.eval if_consequent(exp), env
+    else
+      Eval.eval if_alternative(exp), env
+    end
+  end
+
   def self.assignment_variable(exp)
     # (set! x (+ x 1))
     #       ~
@@ -62,4 +70,33 @@ module Apply
                  Pair.of_pair(parameters, body)
   end
 
+  def self.if_predicate(exp)
+    # (if predicate
+    #     ~~~~~~~~~
+    #     consequence
+    #     alternative)
+    exp.cdr.car
+  end
+
+  def self.if_consequent(exp)
+    # (if predicate
+    #     consequence
+    #     ~~~~~~~~~~~
+    #     alternative)
+    exp.cdr.cdr.car
+  end
+
+  def self.if_alternative(exp)
+    # (if predicate
+    #     consequence
+    #     alternative)
+    #     ~~~~~~~~~~~
+    if !exp.cdr.cdr.cdr.nil?
+      exp.cdr.cdr.cdr.car
+    else
+    # (if predicate
+    #     consequence)
+      Atom.of_nil
+    end
+  end
 end

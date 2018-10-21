@@ -14,6 +14,8 @@ module Eval
       Apply.assignment exp, env
     elsif definition? exp
       Apply.definition exp, env
+    elsif if? exp
+      Apply.if exp, env
     end
   end
 
