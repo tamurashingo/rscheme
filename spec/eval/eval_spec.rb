@@ -151,4 +151,57 @@ RSpec.describe 'Eval' do
       expect(env.variables["A"].value).to eq("abc")
     end
   end
+
+  context 'define' do
+    env = Environment.create_global
+    example '(define func (lambda (x) (+ x 1)))' do
+      parser = Parser.new '(define func (lambda (x) (+ x 1)))'
+      exp = parser.parse
+
+      result = Eval.eval exp, env
+      expect(env.variables['FUNC'].type).to eq(:pair)
+
+      expect(env.variables['FUNC'].car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].car.value).to eq("LAMBDA")
+
+      expect(env.variables['FUNC'].cdr.car.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.car.car.value).to eq("X")
+
+      expect(env.variables['FUNC'].cdr.cdr.car.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.value).to eq("+")
+
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.value).to eq("X")
+
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.type).to eq(:value)
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.value).to eq(1)
+
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.cdr.nil?).to eq(true)
+    end
+
+    example '(define (func x) (+ x 2))' do
+      parser = Parser.new '(define (func x) (+ x 2))'
+      exp = parser.parse
+
+      result = Eval.eval exp, env
+      expect(env.variables['FUNC'].type).to eq(:pair)
+
+      expect(env.variables['FUNC'].car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].car.value).to eq("LAMBDA")
+
+      expect(env.variables['FUNC'].cdr.car.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.car.car.value).to eq("X")
+
+      expect(env.variables['FUNC'].cdr.cdr.car.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.value).to eq("+")
+
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.value).to eq("X")
+
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.type).to eq(:value)
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.value).to eq(2)
+
+      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.cdr.nil?).to eq(true)
+    end
+  end
 end

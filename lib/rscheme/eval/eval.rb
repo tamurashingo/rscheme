@@ -12,6 +12,8 @@ module Eval
       exp.cdr.car
     elsif assignment? exp
       Apply.assignment exp, env
+    elsif definition? exp
+      Apply.definition exp, env
     end
   end
 
