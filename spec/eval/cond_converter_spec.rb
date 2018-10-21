@@ -88,4 +88,22 @@ end
 
     expect { CondConverter.cond_to_if exp }.to raise_error(RschemeException)
   end
+
+  example '(cond (1 2)) => (if 1 2)' do
+    source = '(cond (1 2))'
+    parser = Parser.new source
+    exp = parser.parse
+
+    result = CondConverter.cond_to_if exp
+
+    # (IF 1 2)
+    expect(result.car.type).to eq(:symbol)
+    expect(result.car.value).to eq("IF")
+
+    expect(result.cdr.car.type).to eq(:value)
+    expect(result.cdr.car.value).to eq(1)
+
+    expect(result.cdr.cdr.car.type).to eq(:value)
+    expect(result.cdr.cdr.car.value).to eq(2)
+  end
 end
