@@ -266,4 +266,78 @@ RSpec.describe 'Eval' do
       expect(result.nil?).to eq(true)
     end
   end
+
+  context 'lambda' do
+    example '(lambda (x) (+ x 1)) => (lambda (x) ((+ x 1)) (..env..))' do
+      parser = Parser.new '(lambda (x) (+ x 1))'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.car.type).to eq(:symbol)
+      expect(result.car.value).to eq("LAMBDA")
+
+      # args
+      expect(result.cdr.car.type).to eq(:pair)
+      expect(result.cdr.car.car.type).to eq(:symbol)
+      expect(result.cdr.car.car.value).to eq("X")
+
+      # body
+      expect(result.cdr.cdr.car.type).to eq(:pair)
+      expect(result.cdr.cdr.car.car.type).to eq(:pair)
+      expect(result.cdr.cdr.car.car.car.type).to eq(:symbol)
+      expect(result.cdr.cdr.car.car.car.value).to eq("+")
+      expect(result.cdr.cdr.car.car.cdr.car.type).to eq(:symbol)
+      expect(result.cdr.cdr.car.car.cdr.car.value).to eq("X")
+      expect(result.cdr.cdr.car.car.cdr.cdr.car.type).to eq(:value)
+      expect(result.cdr.cdr.car.car.cdr.cdr.car.value).to eq(1)
+
+      # env
+      expect(result.cdr.cdr.cdr.type).to eq(:pair)
+    end
+
+    example '(lambda (x y) (+ x 1) (+ y 2)) => (lambda (x y) ((+ x 1) (+ y 2)) (..env..))' do
+      parser = Parser.new '(lambda (x y) (+ x 1) (+ y 2))'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.car.type).to eq(:symbol)
+      expect(result.car.value).to eq("LAMBDA")
+
+      # args
+      expect(result.cdr.car.type).to eq(:pair)
+      expect(result.cdr.car.car.type).to eq(:symbol)
+      expect(result.cdr.car.car.value).to eq("X")
+      expect(result.cdr.car.cdr.car.value).to eq("Y")
+
+      # body
+      expect(result.cdr.cdr.car.type).to eq(:pair)
+
+      # body 1
+      # (lambda (x y) ((+ x 1) (+ y 2)) (..env..))
+      #                ~~~~~~~
+      expect(result.cdr.cdr.car.car.type).to eq(:pair)
+      expect(result.cdr.cdr.car.car.car.type).to eq(:symbol)
+      expect(result.cdr.cdr.car.car.car.value).to eq("+")
+      expect(result.cdr.cdr.car.car.cdr.car.type).to eq(:symbol)
+      expect(result.cdr.cdr.car.car.cdr.car.value).to eq("X")
+      expect(result.cdr.cdr.car.car.cdr.cdr.car.type).to eq(:value)
+      expect(result.cdr.cdr.car.car.cdr.cdr.car.value).to eq(1)
+
+      # body 2
+      # (lambda (x y) ((+ x 1) (+ y 2)) (..env..))
+      #                        ~~~~~~~
+      expect(result.cdr.cdr.car.cdr.car.type).to eq(:pair)
+      expect(result.cdr.cdr.car.cdr.car.car.type).to eq(:symbol)
+      expect(result.cdr.cdr.car.cdr.car.car.value).to eq("+")
+      expect(result.cdr.cdr.car.cdr.car.cdr.car.type).to eq(:symbol)
+      expect(result.cdr.cdr.car.cdr.car.cdr.car.value).to eq("Y")
+      expect(result.cdr.cdr.car.cdr.car.cdr.cdr.car.type).to eq(:value)
+      expect(result.cdr.cdr.car.cdr.car.cdr.cdr.car.value).to eq(2)
+
+      # env
+      expect(result.cdr.cdr.cdr.type).to eq(:pair)
+    end
+  end
 end

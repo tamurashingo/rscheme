@@ -28,6 +28,12 @@ module Apply
     end
   end
 
+  def self.make_procedure(exp, env)
+    parameters = lambda_parameters exp
+    body = lambda_body exp
+    ListUtil.list Atom.of_symbol("LAMBDA"), parameters, body, env
+  end
+
   def self.assignment_variable(exp)
     # (set! x (+ x 1))
     #       ~
@@ -99,4 +105,17 @@ module Apply
       Atom.of_nil
     end
   end
+
+  def self.lambda_parameters(exp)
+    # (lambda (x y) (+ x y))
+    #         ~~~~~
+    exp.cdr.car
+  end
+
+  def self.lambda_body(exp)
+    # (lambda (x y) (+ x y))
+    #               ~~~~~~~
+    exp.cdr.cdr
+  end
+
 end
