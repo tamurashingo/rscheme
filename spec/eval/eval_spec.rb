@@ -235,4 +235,35 @@ RSpec.describe 'Eval' do
       expect(result.nil?).to eq(true)
     end
   end
+
+  context 'cond' do
+    example '(cond (1 0) (else 1)) => 0' do
+      parser = Parser.new '(cond (1 0) (else 1))'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(0)
+    end
+
+    example '(cond (() 0) (else 1)) => 1' do
+      parser = Parser.new '(cond (() 0) (else 1))'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(1)
+    end
+
+    example '(cond (() 1) (else)) => nil' do
+      parser = Parser.new '(cond (() 1) (else))'
+      exp = parser.parse
+
+      result = Eval.eval exp, Environment.create_global
+
+      expect(result.nil?).to eq(true)
+    end
+  end
 end
