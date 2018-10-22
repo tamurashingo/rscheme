@@ -146,8 +146,8 @@ end
     expect(result.cdr.cdr.cdr.car.cdr.cdr.car.car.value).to eq("NEWLINE")
   end
 
-  example '(cond (t 1) (else ()) => (if t 1 ())' do
-    source = '(cond (t 1) (else ()))'
+  example '(cond (t 1) (else)) => (if t 1 ())' do
+    source = '(cond (t 1) (else))'
     parser = Parser.new source
     exp = parser.parse
 
@@ -165,5 +165,5 @@ end
 
     expect(result.cdr.cdr.cdr.car.type).to eq(:pair)
     expect(result.cdr.cdr.cdr.car.nil?).to eq(true)
-end
+  end
 end
