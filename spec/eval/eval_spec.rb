@@ -137,6 +137,9 @@ RSpec.describe 'Eval' do
 
       result = Eval.eval exp, env
 
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(1)
+
       expect(env.variables["A"].type).to eq(:value)
       expect(env.variables["A"].value).to eq(1)
     end
@@ -146,6 +149,9 @@ RSpec.describe 'Eval' do
       exp = parser.parse
 
       result = Eval.eval exp, env
+
+      expect(result.type).to eq(:string)
+      expect(result.value).to eq("abc")
 
       expect(env.variables["A"].type).to eq(:string)
       expect(env.variables["A"].value).to eq("abc")
@@ -338,6 +344,25 @@ RSpec.describe 'Eval' do
 
       # env
       expect(result.cdr.cdr.cdr.type).to eq(:pair)
+    end
+  end
+
+  context 'begin' do
+    example '(begin (set! x 1) (set! y 2)) => 2' do
+      parser = Parser.new '(begin (set! x 1) (set! y 2))'
+      exp = parser.parse
+      env = Environment.create_global
+
+      result = Eval.eval exp, env
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(2)
+
+      expect(env.variables['X'].type).to eq(:value)
+      expect(env.variables['X'].value).to eq(1)
+
+      expect(env.variables['Y'].type).to eq(:value)
+      expect(env.variables['Y'].value).to eq(2)
     end
   end
 end

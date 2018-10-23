@@ -18,6 +18,8 @@ module Eval
       Apply.if exp, env
     elsif lambda? exp
       Apply.make_procedure exp, env
+    elsif begin? exp
+      Apply.sequence exp.cdr, env
     elsif cond? exp
       Eval.eval CondConverter.cond_to_if(exp), env
     end

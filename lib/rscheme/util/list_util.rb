@@ -67,4 +67,8 @@ module ListUtil
   def self.rest_list(exp)
     exp.cdr
   end
+
+  def self.last?(exp)
+    exp.cdr.nil?
+  end
 end

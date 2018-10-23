@@ -34,6 +34,15 @@ module Apply
     ListUtil.list Atom.of_symbol("LAMBDA"), parameters, body, env
   end
 
+  def self.sequence(exp, env)
+    if ListUtil.last? exp
+      Eval.eval ListUtil.first_list(exp), env
+    else
+      Eval.eval ListUtil.first_list(exp), env
+      Apply.sequence ListUtil.rest_list(exp), env
+    end
+  end
+
   def self.assignment_variable(exp)
     # (set! x (+ x 1))
     #       ~
