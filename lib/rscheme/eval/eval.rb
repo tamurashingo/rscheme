@@ -25,6 +25,8 @@ module Eval
     elsif application? exp
       Apply.apply Eval.eval(operator(exp), env),
                   list_of_values(operands(exp), env)
+    else
+      raise RschemeException, "unknown expression:#{exp.type}:#{exp.value}"
     end
   end
 

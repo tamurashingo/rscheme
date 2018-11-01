@@ -426,4 +426,8 @@ RSpec.describe 'Eval' do
       expect(result.value).to eq(5)
     end
   end
+
+  example 'unknown expression' do
+    expect{ Eval.eval LObj.new(:unknown, 'unknwon'), Initializer.initialize_environment }.to raise_error(RschemeException)
+  end
 end
