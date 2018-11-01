@@ -1,4 +1,7 @@
 require 'rscheme/rscheme_exception'
 
-class LexException < RschemeException
+module Rscheme
+  class LexException < RschemeException
+  end
 end
+

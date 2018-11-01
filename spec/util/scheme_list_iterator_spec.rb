@@ -4,9 +4,9 @@ require 'rscheme/util/scheme_list_iterator'
 
 RSpec.describe 'SchemeListIterator' do
   example '("this" "is" "a" "pen")' do
-    list = ListUtil.list Atom.of_string("this"), Atom.of_string("is"), Atom.of_string("a"), Atom.of_string("pen")
+    list = Rscheme::ListUtil.list Rscheme::Atom.of_string("this"), Rscheme::Atom.of_string("is"), Rscheme::Atom.of_string("a"), Rscheme::Atom.of_string("pen")
 
-    iterator = SchemeListIterator.new list
+    iterator = Rscheme::SchemeListIterator.new list
 
     expect(iterator.has_next?).to eq(true)
 
@@ -33,9 +33,9 @@ RSpec.describe 'SchemeListIterator' do
   end
 
   example '()' do
-    list = ListUtil.list
+    list = Rscheme::ListUtil.list
 
-    iterator = SchemeListIterator.new list
+    iterator = Rscheme::SchemeListIterator.new list
 
     expect(iterator.has_next?).to eq(false)
   end

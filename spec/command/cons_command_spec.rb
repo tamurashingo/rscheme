@@ -5,14 +5,14 @@ require 'rscheme/command/cons_command'
 require 'rscheme/util/list_util'
 
 RSpec.describe 'ConsCommand' do
-  cmd = ConsCommand.new
+  cmd = Rscheme::ConsCommand.new
 
   example 'cons atom atom' do
     # (cons atom1 "atom2") => (atom1 . "atom2")
-    a1 = Atom.of_symbol 'atom1'
-    a2 = Atom.of_string 'atom2'
+    a1 = Rscheme::Atom.of_symbol 'atom1'
+    a2 = Rscheme::Atom.of_string 'atom2'
 
-    result = cmd.operate ListUtil.list(a1, a2)
+    result = cmd.operate Rscheme::ListUtil.list(a1, a2)
 
     expect(result.type).to eq(:pair)
 
@@ -24,10 +24,10 @@ RSpec.describe 'ConsCommand' do
 
   example 'cons atom pair' do
     # (cons atom1 (cons "atom2" 3)) => (atom1 . ("atom2" . 3))
-    a1 = Atom.of_symbol 'atom1'
-    a2 = Pair.of_pair Atom.of_string('atom2'), Atom.of_value(3)
+    a1 = Rscheme::Atom.of_symbol 'atom1'
+    a2 = Rscheme::Pair.of_pair Rscheme::Atom.of_string('atom2'), Rscheme::Atom.of_value(3)
 
-    result = cmd.operate ListUtil.list(a1, a2)
+    result = cmd.operate Rscheme::ListUtil.list(a1, a2)
 
     expect(result.type).to eq(:pair)
 
@@ -43,10 +43,10 @@ RSpec.describe 'ConsCommand' do
 
   example 'cons pair atom' do
     # (cons (cons atom1 "atom2") 3) => ((atom1 . "atom2") . 3)
-    a1 = Pair.of_pair Atom.of_symbol('atom1'), Atom.of_string('atom2')
-    a2 = Atom.of_value 3
+    a1 = Rscheme::Pair.of_pair Rscheme::Atom.of_symbol('atom1'), Rscheme::Atom.of_string('atom2')
+    a2 = Rscheme::Atom.of_value 3
 
-    result = cmd.operate ListUtil.list(a1, a2)
+    result = cmd.operate Rscheme::ListUtil.list(a1, a2)
 
     expect(result.type).to eq(:pair)
 
@@ -62,10 +62,10 @@ RSpec.describe 'ConsCommand' do
 
   example 'cons pair pair' do
     # (cons (cons atom1 "atom2") (cons 3 4)) => ((atom1 . "atom2") . (3 . 4))
-    a1 = Pair.of_pair Atom.of_symbol('atom1'), Atom.of_string("atom2")
-    a2 = Pair.of_pair Atom.of_value(3), Atom.of_value(4)
+    a1 = Rscheme::Pair.of_pair Rscheme::Atom.of_symbol('atom1'), Rscheme::Atom.of_string("atom2")
+    a2 = Rscheme::Pair.of_pair Rscheme::Atom.of_value(3), Rscheme::Atom.of_value(4)
 
-    result = cmd.operate ListUtil.list(a1, a2)
+    result = cmd.operate Rscheme::ListUtil.list(a1, a2)
 
     expect(result.type).to eq(:pair)
 

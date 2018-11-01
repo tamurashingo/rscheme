@@ -5,10 +5,10 @@ require 'rscheme/eval/cond_converter'
 RSpec.describe 'CondConveter' do
   example '(cond ((> x 1) x) ((= x 0) 0) (else (- x 0))) => (IF (> x 1) X (IF (= X 0) 0 (- X 0)))' do
     source = '(cond ((> x 1) x) ((= x 0) 0) (else (- x 0)))'
-    parser = Parser.new source
+    parser = Rscheme::Parser.new source
     exp = parser.parse
 
-    result = CondConverter.cond_to_if exp
+    result = Rscheme::CondConverter.cond_to_if exp
 
     # (IF (> x 1) X (IF (= X 0) 0 (- X 0)))
 
@@ -52,10 +52,10 @@ RSpec.describe 'CondConveter' do
 
   example '(cond (true x) (false y) (else 0)) => (IF TRUE X (IF FALSE Y 0))' do
     source = '(cond (true x) (false y) (else 0))'
-    parser = Parser.new source
+    parser = Rscheme::Parser.new source
     exp = parser.parse
 
-    result = CondConverter.cond_to_if exp
+    result = Rscheme::CondConverter.cond_to_if exp
 
     # (IF TRUE X (IF FALSE Y 0))
 
@@ -83,18 +83,18 @@ end
 
   example '(cond (true x) (else 0) (false y)) => RschemeException' do
     source = '(cond (true x) (else 0) (false y))'
-    parser = Parser.new source
+    parser = Rscheme::Parser.new source
     exp = parser.parse
 
-    expect { CondConverter.cond_to_if exp }.to raise_error(RschemeException)
+    expect { Rscheme::CondConverter.cond_to_if exp }.to raise_error(Rscheme::RschemeException)
   end
 
   example '(cond (1 2)) => (if 1 2)' do
     source = '(cond (1 2))'
-    parser = Parser.new source
+    parser = Rscheme::Parser.new source
     exp = parser.parse
 
-    result = CondConverter.cond_to_if exp
+    result = Rscheme::CondConverter.cond_to_if exp
 
     # (IF 1 2)
     expect(result.car.type).to eq(:symbol)
@@ -109,10 +109,10 @@ end
 
   example '(cond (1 (display "ok") (newline)) (else (display "ng") (newline))) => (if 1 (begin (display "ok") (newline)) (begin (display "ng") (newline)))' do
     source = '(cond (1 (display "ok") (newline)) (else (display "ng") (newline)))'
-    parser = Parser.new source
+    parser = Rscheme::Parser.new source
     exp = parser.parse
 
-    result = CondConverter.cond_to_if exp
+    result = Rscheme::CondConverter.cond_to_if exp
 
     # (if 1 (begin (display "ok") (newline)) (begin (display "ng") (newline)))
     expect(result.car.type).to eq(:symbol)
@@ -148,10 +148,10 @@ end
 
   example '(cond (t 1) (else)) => (if t 1 ())' do
     source = '(cond (t 1) (else))'
-    parser = Parser.new source
+    parser = Rscheme::Parser.new source
     exp = parser.parse
 
-    result = CondConverter.cond_to_if exp
+    result = Rscheme::CondConverter.cond_to_if exp
 
     # (if t 1 ())
     expect(result.car.type).to eq(:symbol)

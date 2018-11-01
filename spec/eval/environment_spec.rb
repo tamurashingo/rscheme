@@ -5,9 +5,9 @@ require 'rscheme/eval/environment'
 
 RSpec.describe 'Environment' do
   context 'set_variable' do
-    env1 = Environment.new nil
-    env2 = Environment.new env1
-    env3 = Environment.new env2
+    env1 = Rscheme::Environment.new nil
+    env2 = Rscheme::Environment.new env1
+    env3 = Rscheme::Environment.new env2
 
     env1.store :value1, 1
     env2.store :value2, 2
@@ -49,9 +49,9 @@ RSpec.describe 'Environment' do
   end
 
   context 'lookup' do
-    env1 = Environment.new nil
-    env2 = Environment.new env1
-    env3 = Environment.new env2
+    env1 = Rscheme::Environment.new nil
+    env2 = Rscheme::Environment.new env1
+    env3 = Rscheme::Environment.new env2
 
     env1.store "VALUE1", 1
     env2.store "VALUE2", 2
@@ -70,15 +70,15 @@ RSpec.describe 'Environment' do
     end
 
     example '値を取得できない場合は例外が発生すること' do
-      expect{ env3.lookup("VALUE0") }.to raise_error(RschemeException)
+      expect{ env3.lookup("VALUE0") }.to raise_error(Rscheme::RschemeException)
     end
   end
   
   context 'extend_environment' do
-    env = Environment.new nil
+    env = Rscheme::Environment.new nil
 
-    env.store "VALUE", Atom.of_value(0)
-    n_env = env.extend_environment ListUtil.list(Atom.of_symbol("X"), Atom.of_symbol("Y")), ListUtil.list(Atom.of_value(1), Atom.of_value(2))
+    env.store "VALUE", Rscheme::Atom.of_value(0)
+    n_env = env.extend_environment Rscheme::ListUtil.list(Rscheme::Atom.of_symbol("X"), Rscheme::Atom.of_symbol("Y")), Rscheme::ListUtil.list(Rscheme::Atom.of_value(1), Rscheme::Atom.of_value(2))
 
     it 'returns another instance from original environment' do
       expect(n_env).not_to be(env)

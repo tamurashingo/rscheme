@@ -1,4 +1,7 @@
 require 'rscheme/rscheme_exception'
 
-class ParseException < RschemeException
+module Rscheme
+  class ParseException < RschemeException
+  end
 end
+

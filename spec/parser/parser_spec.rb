@@ -5,7 +5,7 @@ require 'rscheme/parser/parse_exception'
 
 RSpec.describe 'Parser' do
   example 'string' do
-    parser = Parser.new '"this is a pen"'
+    parser = Rscheme::Parser.new '"this is a pen"'
     obj = parser.parse
 
     expect(obj.nil?).to eq(false)
@@ -14,7 +14,7 @@ RSpec.describe 'Parser' do
   end
 
   example 'integer' do
-    parser = Parser.new "100"
+    parser = Rscheme::Parser.new "100"
     obj = parser.parse
 
     expect(obj.nil?).to eq(false)
@@ -23,7 +23,7 @@ RSpec.describe 'Parser' do
   end
 
   example 'float' do
-    parser = Parser.new "-3.14"
+    parser = Rscheme::Parser.new "-3.14"
     obj = parser.parse
 
     expect(obj.nil?).to eq(false)
@@ -32,7 +32,7 @@ RSpec.describe 'Parser' do
   end
 
   example 'symbol' do
-    parser = Parser.new "variable"
+    parser = Rscheme::Parser.new "variable"
     obj = parser.parse
 
     expect(obj.nil?).to eq(false)
@@ -41,7 +41,7 @@ RSpec.describe 'Parser' do
   end
 
   example 'list: (+ X Y)' do
-    parser = Parser.new "(+ X Y)"
+    parser = Rscheme::Parser.new "(+ X Y)"
     obj = parser.parse
 
     expect(obj.nil?).to eq(false)
@@ -59,7 +59,7 @@ RSpec.describe 'Parser' do
   end
 
   example 'list: ((x 1) (y 2))' do
-    parser = Parser.new "((x 1) (y 2))"
+    parser = Rscheme::Parser.new "((x 1) (y 2))"
     obj = parser.parse
 
     expect(obj.nil?).to eq(false)
@@ -88,7 +88,7 @@ RSpec.describe 'Parser' do
   end
 
   example "quote: 'a => (QUOTE A)" do
-    parser = Parser.new "'a"
+    parser = Rscheme::Parser.new "'a"
     obj = parser.parse
 
     # (QUOTE A)
@@ -104,7 +104,7 @@ RSpec.describe 'Parser' do
   end
 
   example "quote: '3.14 => (QUOTE 3.14)" do
-    parser = Parser.new "'3.14"
+    parser = Rscheme::Parser.new "'3.14"
     obj = parser.parse
 
     # (QUOTE 3.14)
@@ -120,7 +120,7 @@ RSpec.describe 'Parser' do
   end
 
   example "quote: '(a b c) => (QUOTE (A B C))" do
-    parser = Parser.new "'(a b c)"
+    parser = Rscheme::Parser.new "'(a b c)"
     obj = parser.parse
 
     # (QUOTE )
@@ -147,8 +147,8 @@ RSpec.describe 'Parser' do
 
   context 'error case' do
     it "errors when read ')'" do
-      parser = Parser.new ")"
-      expect{ parser.parse }.to raise_error(ParseException)
+      parser = Rscheme::Parser.new ")"
+      expect{ parser.parse }.to raise_error(Rscheme::ParseException)
     end
   end
 end

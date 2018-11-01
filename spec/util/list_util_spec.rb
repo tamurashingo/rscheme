@@ -5,11 +5,11 @@ require 'rscheme/util/list_util'
 
 RSpec.describe 'ListUtil' do
   describe 'copy' do
-    src = Pair.of_pair Atom.of_string("this"),
-                       Pair.of_pair(Atom.of_string("is"),
-                                    Pair.of_pair(Atom.of_string("a"),
-                                                 Pair.of_pair(Atom.of_string("pen"), Atom.of_nil)))
-    result = ListUtil.copy src
+    src = Rscheme::Pair.of_pair Rscheme::Atom.of_string("this"),
+                                Rscheme::Pair.of_pair(Rscheme::Atom.of_string("is"),
+                                    Rscheme::Pair.of_pair(Rscheme::Atom.of_string("a"),
+                                                          Rscheme::Pair.of_pair(Rscheme::Atom.of_string("pen"), Rscheme::Atom.of_nil)))
+    result = Rscheme::ListUtil.copy src
     it 'returns another instance' do
       expect(result).not_to be(src)
     end
@@ -33,15 +33,15 @@ RSpec.describe 'ListUtil' do
 
   describe 'append' do
     example 'nil nil -> nil' do
-      result = ListUtil.append Atom.of_nil, Atom.of_nil
+      result = Rscheme::ListUtil.append Rscheme::Atom.of_nil, Rscheme::Atom.of_nil
       expect(result.nil?).to eq(true)
     end
 
     context "'() '(a) -> '(a)" do
-      l1 = Atom.of_nil
-      l2 = Pair.of_pair Atom.of_symbol("a"), Atom.of_nil
+      l1 = Rscheme::Atom.of_nil
+      l2 = Rscheme::Pair.of_pair Rscheme::Atom.of_symbol("a"), Rscheme::Atom.of_nil
 
-      result = ListUtil.append l1, l2
+      result = Rscheme::ListUtil.append l1, l2
 
       it "returns another instance" do
         expect(result.nil?).to eq(false)
@@ -56,10 +56,10 @@ RSpec.describe 'ListUtil' do
     end
 
     context "'(a) '(b c) -> '(a b c)" do
-      l1 = Pair.of_pair Atom.of_symbol("a"), Atom.of_nil
-      l2 = Pair.of_pair Atom.of_symbol("b"), Pair.of_pair(Atom.of_symbol("c"), Atom.of_nil)
+      l1 = Rscheme::Pair.of_pair Rscheme::Atom.of_symbol("a"), Rscheme::Atom.of_nil
+      l2 = Rscheme::Pair.of_pair Rscheme::Atom.of_symbol("b"), Rscheme::Pair.of_pair(Rscheme::Atom.of_symbol("c"), Rscheme::Atom.of_nil)
 
-      result = ListUtil.append l1, l2
+      result = Rscheme::ListUtil.append l1, l2
 
       it "returns '(a b c)" do
         expect(result.car.type).to eq(:symbol)
