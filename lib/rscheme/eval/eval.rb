@@ -22,6 +22,9 @@ module Eval
       Apply.sequence exp.cdr, env
     elsif cond? exp
       Eval.eval CondConverter.cond_to_if(exp), env
+    elsif application? exp
+      Apply.apply Eval.eval(operator(exp), env),
+                  list_of_values(operands(exp), env)
     end
   end
 
@@ -61,7 +64,32 @@ module Eval
     ListUtil.tagged_list exp, "COND"
   end
 
-  def self.application(exp)
+  def self.application?(exp)
     exp.type == :pair
+  end
+
+  def self.operator(exp)
+    exp.car
+  end
+
+  def self.operands(exp)
+    exp.cdr
+  end
+
+  def self.first_operand(operands)
+    operands.car
+  end
+
+  def self.rest_operands(operands)
+    operands.cdr
+  end
+
+  def self.list_of_values(exp, env)
+    if exp.nil?
+      Atom.of_nil
+    else
+      Pair.of_pair Eval.eval(first_operand(exp), env),
+                   list_of_values(rest_operands(exp), env)
+    end
   end
 end

@@ -74,5 +74,31 @@ RSpec.describe 'Environment' do
     end
   end
   
+  context 'extend_environment' do
+    env = Environment.new nil
+
+    env.store "VALUE", Atom.of_value(0)
+    n_env = env.extend_environment ListUtil.list(Atom.of_symbol("X"), Atom.of_symbol("Y")), ListUtil.list(Atom.of_value(1), Atom.of_value(2))
+
+    it 'returns another instance from original environment' do
+      expect(n_env).not_to be(env)
+    end
+
+    example '拡張した値が取れること' do
+      x = n_env.lookup("X")
+      expect(x.type).to eq(:value)
+      expect(x.value).to eq(1)
+
+      y = n_env.lookup("Y")
+      expect(y.type).to eq(:value)
+      expect(y.value).to eq(2)
+    end
+
+    example '元の環境の値が取れること' do
+      value = n_env.lookup("VALUE")
+      expect(value.type).to eq(:value)
+      expect(value.value).to eq(0)
+    end
+  end
 end
 

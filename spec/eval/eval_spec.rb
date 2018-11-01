@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'rscheme/rscheme_exception'
 require 'rscheme/parser/parser'
 require 'rscheme/eval/eval'
+require 'rscheme/eval/environment'
+require 'rscheme/eval/initializer'
 
 RSpec.describe 'Eval' do
   context 'self evaluating' do
@@ -160,7 +162,7 @@ RSpec.describe 'Eval' do
 
   context 'define' do
     env = Environment.create_global
-    example '(define func (lambda (x) (+ x 1)))' do
+    example '(define func (lambda (x) (+ x 1))) => (PROCEDURE (X) ((+ X 1)) (env)' do
       parser = Parser.new '(define func (lambda (x) (+ x 1)))'
       exp = parser.parse
 
@@ -168,21 +170,21 @@ RSpec.describe 'Eval' do
       expect(env.variables['FUNC'].type).to eq(:pair)
 
       expect(env.variables['FUNC'].car.type).to eq(:symbol)
-      expect(env.variables['FUNC'].car.value).to eq("LAMBDA")
+      expect(env.variables['FUNC'].car.value).to eq("PROCEDURE")
 
       expect(env.variables['FUNC'].cdr.car.car.type).to eq(:symbol)
       expect(env.variables['FUNC'].cdr.car.car.value).to eq("X")
 
-      expect(env.variables['FUNC'].cdr.cdr.car.car.type).to eq(:symbol)
-      expect(env.variables['FUNC'].cdr.cdr.car.car.value).to eq("+")
+      expect(env.variables['FUNC'].cdr.cdr.car.car.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.car.value).to eq("+")
 
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.type).to eq(:symbol)
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.value).to eq("X")
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.car.value).to eq("X")
 
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.type).to eq(:value)
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.value).to eq(1)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.cdr.car.type).to eq(:value)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.cdr.car.value).to eq(1)
 
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.cdr.nil?).to eq(true)
+      expect(env.variables['FUNC'].cdr.cdr.cdr.car.nil?).to eq(false)
     end
 
     example '(define (func x) (+ x 2))' do
@@ -193,21 +195,21 @@ RSpec.describe 'Eval' do
       expect(env.variables['FUNC'].type).to eq(:pair)
 
       expect(env.variables['FUNC'].car.type).to eq(:symbol)
-      expect(env.variables['FUNC'].car.value).to eq("LAMBDA")
+      expect(env.variables['FUNC'].car.value).to eq("PROCEDURE")
 
       expect(env.variables['FUNC'].cdr.car.car.type).to eq(:symbol)
       expect(env.variables['FUNC'].cdr.car.car.value).to eq("X")
 
-      expect(env.variables['FUNC'].cdr.cdr.car.car.type).to eq(:symbol)
-      expect(env.variables['FUNC'].cdr.cdr.car.car.value).to eq("+")
+      expect(env.variables['FUNC'].cdr.cdr.car.car.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.car.value).to eq("+")
 
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.type).to eq(:symbol)
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.car.value).to eq("X")
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.car.type).to eq(:symbol)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.car.value).to eq("X")
 
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.type).to eq(:value)
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.car.value).to eq(2)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.cdr.car.type).to eq(:value)
+      expect(env.variables['FUNC'].cdr.cdr.car.car.cdr.cdr.car.value).to eq(2)
 
-      expect(env.variables['FUNC'].cdr.cdr.car.cdr.cdr.cdr.nil?).to eq(true)
+      expect(env.variables['FUNC'].cdr.cdr.cdr.car.nil?).to eq(false)
     end
   end
 
@@ -281,7 +283,7 @@ RSpec.describe 'Eval' do
       result = Eval.eval exp, Environment.create_global
 
       expect(result.car.type).to eq(:symbol)
-      expect(result.car.value).to eq("LAMBDA")
+      expect(result.car.value).to eq("PROCEDURE")
 
       # args
       expect(result.cdr.car.type).to eq(:pair)
@@ -309,7 +311,7 @@ RSpec.describe 'Eval' do
       result = Eval.eval exp, Environment.create_global
 
       expect(result.car.type).to eq(:symbol)
-      expect(result.car.value).to eq("LAMBDA")
+      expect(result.car.value).to eq("PROCEDURE")
 
       # args
       expect(result.cdr.car.type).to eq(:pair)
@@ -363,6 +365,65 @@ RSpec.describe 'Eval' do
 
       expect(env.variables['Y'].type).to eq(:value)
       expect(env.variables['Y'].value).to eq(2)
+    end
+  end
+
+  context 'application' do
+    example '(+ 1 2) => 3' do
+      parser = Parser.new '(+ 1 2)'
+      exp = parser.parse
+
+      result = Eval.eval exp, Initializer.initialize_environment
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(3)
+    end
+
+    example '(+ 1 (+ 2 3)) => 6' do
+      parser = Parser.new '(+ 1 (+ 2 3))'
+      exp = parser.parse
+
+      result = Eval.eval exp, Initializer.initialize_environment
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(6)
+    end
+
+    example '(define (plus-one x) (+ x 1)) (plus-one 1) => 2' do
+      env = Initializer.initialize_environment
+      parser = Parser.new '(define (plus-one x) (+ x 1))'
+      exp = parser.parse
+
+      Eval.eval exp, env
+
+      parser = Parser.new '(plus-one 1)'
+      exp = parser.parse
+
+      result = Eval.eval exp, env
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(2)
+    end
+
+    example '(define (plus-two x) (plus-one (plus-one x))) (plus-two 3) => 5' do
+      env = Initializer.initialize_environment
+      parser = Parser.new '(define plus-one (lambda (x) (+ x 1)))'
+      exp = parser.parse
+
+      Eval.eval exp, env
+
+      parser = Parser.new '(define (plus-two x) (plus-one (plus-one x)))'
+      exp = parser.parse
+
+      Eval.eval exp, env
+
+      parser = Parser.new '(plus-two 3)'
+      exp = parser.parse
+
+      result = Eval.eval exp, env
+
+      expect(result.type).to eq(:value)
+      expect(result.value).to eq(5)
     end
   end
 end

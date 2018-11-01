@@ -1,4 +1,5 @@
 require 'rscheme/lobj'
+require 'rscheme/rscheme_exception'
 
 # ATOMオブジェクト
 #
@@ -31,4 +32,13 @@ class Atom < LObj
   def nil?()
     @type == :nil
   end
+
+  def car
+    raise RschemeException, 'type error, expected pair but atom'
+  end
+
+  def cdr
+    raise RschemeException, 'type error, expected pair but atom'
+  end
+
 end
