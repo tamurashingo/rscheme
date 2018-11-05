@@ -35,9 +35,7 @@ module Rscheme
 
     def to_s_internal(obj)
       buf = ''
-      if obj.nil?
-        buf << obj.to_s
-      elsif obj.type == :pair
+      if obj.type == :pair
         buf << obj.car.to_s
         if obj.cdr.nil?
           # cdrがNILなら何もしない
