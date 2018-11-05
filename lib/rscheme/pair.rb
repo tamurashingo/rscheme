@@ -25,5 +25,36 @@ module Rscheme
     def set_cdr(l)
       value[1] = l
     end
+
+    def to_s
+      s = '('
+      s << to_s_internal(self)
+      s << ')'
+      s
+    end
+
+    def to_s_internal(obj)
+      buf = ''
+      if obj.nil?
+        buf << obj.to_s
+      elsif obj.type == :pair
+        buf << obj.car.to_s
+        if obj.cdr.nil?
+          # cdrがNILなら何もしない
+        elsif obj.cdr.type == :pair
+          # cdrがpairならリストで表現する
+          buf << ' '
+          buf << to_s_internal(obj.cdr)
+        else
+          # cdrがatomならドットで表現する
+          buf << ' . '
+          buf << to_s_internal(obj.cdr)
+        end
+      else
+        # atom
+        buf << obj.to_s
+      end
+      buf
+    end
   end
 end

@@ -157,7 +157,7 @@ module Rscheme
       end
 
       def self.apply_primitive_procedure(procedure, arguments)
-        cmd = procedure.cdr.car
+        cmd = procedure.cdr.car.value
         cmd.operate arguments
       end
 

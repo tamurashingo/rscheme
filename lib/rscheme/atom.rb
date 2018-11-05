@@ -25,6 +25,12 @@ module Rscheme
       new :value, value
     end
 
+    # その他のATOMを作成する
+    # 主に初期メソッド用
+    def self.of_other(other)
+      new :other, other
+    end
+
     # NULL値を作成する
     def self.of_nil()
       new :nil, ''
@@ -40,6 +46,16 @@ module Rscheme
 
     def cdr
       raise RschemeException, 'type error, expected pair but atom'
+    end
+
+    def to_s
+      if nil?
+        "NIL"
+      elsif type == :string
+        sprintf '"%s"', value
+      else
+        sprintf '%s', value
+      end
     end
   end
 end
